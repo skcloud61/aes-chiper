@@ -8,7 +8,6 @@
     <meta name="apple-mobile-web-app-title" content="RES Cipher">
     <title>RES Cipher</title>
     <style>
-        /* ===== 기본 리셋 & 변수 ===== */
         :root {
             --primary: #7c3aed;
             --primary-light: #a78bfa;
@@ -26,14 +25,12 @@
             --radius: 18px;
             --radius-sm: 10px;
         }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
-
         html, body {
             height: 100%;
             font-family: -apple-system, 'SF Pro Display', 'Apple SD Gothic Neo',
@@ -42,8 +39,6 @@
             color: var(--text);
             overflow-x: hidden;
         }
-
-        /* ===== 상단 헤더 ===== */
         .app-header {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--secondary) 100%);
             padding: 52px 20px 24px;
@@ -51,7 +46,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .app-header::before {
             content: '';
             position: absolute;
@@ -60,7 +54,6 @@
             background: rgba(255,255,255,0.08);
             border-radius: 50%;
         }
-
         .app-header::after {
             content: '';
             position: absolute;
@@ -69,29 +62,18 @@
             background: rgba(255,255,255,0.06);
             border-radius: 50%;
         }
-
-        .header-icon {
-            font-size: 48px;
-            margin-bottom: 8px;
-            display: block;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
-        }
-
         .header-title {
             font-size: 28px;
             font-weight: 800;
             color: #fff;
             letter-spacing: -0.5px;
         }
-
         .header-sub {
             font-size: 13px;
             color: rgba(255,255,255,0.75);
             margin-top: 4px;
             letter-spacing: 1px;
         }
-
-        /* ===== 탭 ===== */
         .tab-bar {
             display: flex;
             background: var(--card);
@@ -101,7 +83,6 @@
             z-index: 100;
             box-shadow: 0 2px 12px rgba(0,0,0,0.06);
         }
-
         .tab-btn {
             flex: 1;
             padding: 14px 8px;
@@ -114,35 +95,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
             transition: all 0.2s;
             border-bottom: 3px solid transparent;
-            position: relative;
         }
-
         .tab-btn.active {
             color: var(--primary);
             border-bottom-color: var(--primary);
             background: rgba(124,58,237,0.04);
         }
-
-        .tab-icon {
-            font-size: 17px;
-        }
-
-        /* ===== 탭 콘텐츠 ===== */
         .tab-content {
             display: none;
-            padding: 20px 16px 100px;
+            padding: 20px 16px;
+            padding-bottom: calc(100px + env(safe-area-inset-bottom));
             max-width: 600px;
             margin: 0 auto;
         }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* ===== 카드 ===== */
+        .tab-content.active { display: block; }
         .card {
             background: var(--card);
             border-radius: var(--radius);
@@ -151,32 +119,21 @@
             box-shadow: var(--shadow);
             border: 1px solid rgba(124,58,237,0.08);
         }
-
         .card-title {
             font-size: 14px;
             font-weight: 700;
             color: var(--primary);
             margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
-
-        /* ===== 입력 필드 ===== */
-        .input-group {
-            margin-bottom: 14px;
-        }
-
+        .input-group { margin-bottom: 14px; }
         .input-label {
             font-size: 12px;
             font-weight: 600;
             color: var(--text-sub);
             margin-bottom: 6px;
             display: block;
-            text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-
         .input-field {
             width: 100%;
             padding: 14px 16px;
@@ -190,13 +147,11 @@
             transition: all 0.2s;
             -webkit-appearance: none;
         }
-
         .input-field:focus {
             border-color: var(--primary-light);
             background: #fff;
             box-shadow: 0 0 0 4px rgba(124,58,237,0.08);
         }
-
         .input-field.key-field {
             font-size: 20px;
             font-weight: 700;
@@ -204,21 +159,17 @@
             text-align: center;
             color: var(--primary);
         }
-
         textarea.input-field {
             min-height: 130px;
             resize: vertical;
             line-height: 1.6;
         }
-
         .char-count {
             text-align: right;
             font-size: 11px;
             color: var(--text-sub);
             margin-top: 4px;
         }
-
-        /* ===== 버튼 ===== */
         .btn {
             width: 100%;
             padding: 16px;
@@ -232,57 +183,42 @@
             justify-content: center;
             gap: 8px;
             transition: all 0.2s;
-            letter-spacing: 0.3px;
             -webkit-appearance: none;
         }
-
-        .btn:active {
-            transform: scale(0.97);
-        }
-
+        .btn:active { transform: scale(0.97); }
         .btn-primary {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
             box-shadow: 0 4px 20px rgba(124,58,237,0.35);
         }
-
         .btn-secondary {
             background: linear-gradient(135deg, var(--secondary) 0%, #0ea5e9 100%);
             color: white;
             box-shadow: 0 4px 20px rgba(79,70,229,0.35);
         }
-
         .btn-success {
             background: linear-gradient(135deg, var(--success) 0%, #0d9488 100%);
             color: white;
             box-shadow: 0 4px 16px rgba(16,185,129,0.3);
         }
-
         .btn-small {
             width: auto;
             padding: 8px 14px;
             font-size: 12px;
             border-radius: 8px;
         }
-
         .btn-outline {
             background: transparent;
             border: 2px solid var(--border);
             color: var(--text-sub);
             box-shadow: none;
         }
-
-        .btn-outline:active {
-            background: var(--bg);
-        }
-
+        .btn-outline:active { background: var(--bg); }
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
         }
-
-        /* ===== 결과 박스 ===== */
         .result-box {
             background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
             border: 2px solid rgba(16,185,129,0.3);
@@ -290,32 +226,22 @@
             padding: 14px;
             margin-top: 12px;
         }
-
         .result-box.decrypt-result {
             background: linear-gradient(135deg, #eff6ff, #f0f9ff);
             border-color: rgba(79,70,229,0.3);
         }
-
         .result-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
         }
-
         .result-label {
             font-size: 12px;
             font-weight: 700;
             color: var(--success);
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
-
-        .result-label.decrypt {
-            color: var(--secondary);
-        }
-
+        .result-label.decrypt { color: var(--secondary); }
         .result-text {
             font-family: 'SF Mono', 'Fira Code', monospace;
             font-size: 13px;
@@ -329,57 +255,10 @@
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
-
         .result-text.plain-text {
             font-family: inherit;
             font-size: 16px;
         }
-
-        /* ===== 프로세스 스텝 ===== */
-        .steps-flow {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: linear-gradient(135deg, #f5f3ff, #ede9fe);
-            border-radius: var(--radius-sm);
-            padding: 14px 10px;
-            margin-top: 12px;
-        }
-
-        .step-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            flex: 1;
-        }
-
-        .step-icon-wrap {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 17px;
-            margin-bottom: 2px;
-        }
-
-        .step-name {
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-            text-align: center;
-        }
-
-        .step-arrow {
-            font-size: 14px;
-            color: var(--primary-light);
-            flex: 0 0 auto;
-            margin: 0 2px;
-        }
-
-        /* ===== 알림 배너 ===== */
         .toast {
             position: fixed;
             bottom: 90px;
@@ -398,17 +277,13 @@
             white-space: nowrap;
             box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
-
         .toast.show {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
-
         .toast.success { background: var(--success); }
         .toast.error   { background: var(--danger); }
         .toast.info    { background: var(--primary); }
-
-        /* ===== 오류 메시지 ===== */
         .error-msg {
             background: rgba(239,68,68,0.08);
             border: 1px solid rgba(239,68,68,0.25);
@@ -419,77 +294,19 @@
             margin-top: 10px;
             display: none;
         }
-
         .error-msg.show { display: flex; align-items: center; gap: 8px; }
-
-        /* ===== 정보 탭 ===== */
-        .info-card {
-            background: var(--card);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow);
-        }
-
-        .info-title {
-            font-size: 17px;
-            font-weight: 800;
-            margin-bottom: 14px;
+        .key-strength {
             display: flex;
-            align-items: center;
-            gap: 8px;
+            gap: 4px;
+            margin-top: 8px;
         }
-
-        .algo-step {
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
-            padding: 14px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 10px;
-        }
-
-        .algo-num {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-
-        .algo-title {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 3px;
-        }
-
-        .algo-desc {
-            font-size: 12px;
-            color: var(--text-sub);
-            line-height: 1.5;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            margin-left: 6px;
-        }
-
-        /* ===== 구분선 ===== */
-        .divider {
-            height: 1px;
+        .strength-bar {
+            height: 4px;
+            flex: 1;
+            border-radius: 2px;
             background: var(--border);
-            margin: 16px 0;
+            transition: background 0.3s;
         }
-
-        /* ===== 로딩 스피너 ===== */
         .spinner {
             width: 20px;
             height: 20px;
@@ -498,85 +315,48 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* ===== 키 강도 표시 ===== */
-        .key-strength {
-            display: flex;
-            gap: 4px;
-            margin-top: 8px;
-        }
-
-        .strength-bar {
-            height: 4px;
-            flex: 1;
-            border-radius: 2px;
-            background: var(--border);
-            transition: background 0.3s;
-        }
-
-        /* ===== 스크롤바 숨기기 (웹킷) ===== */
-        ::-webkit-scrollbar { display: none; }
-
-        /* ===== 애니메이션 ===== */
+        @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(12px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-
         .result-animate {
             animation: fadeInUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-
-        /* ===== Safe Area (노치 대응) ===== */
-        .tab-content {
-            padding-bottom: calc(100px + env(safe-area-inset-bottom));
-        }
+        ::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
 
-<!-- ===== 헤더 ===== -->
 <div class="app-header">
-    <span class="header-icon">🔐</span>
     <div class="header-title">RES Cipher</div>
     <div class="header-sub">Row · Expansion · Substitution</div>
 </div>
 
-<!-- ===== 탭 바 ===== -->
 <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('encrypt')" id="tab-encrypt">
-        <span class="tab-icon">🔒</span> 암호화
-    </button>
-    <button class="tab-btn" onclick="switchTab('decrypt')" id="tab-decrypt">
-        <span class="tab-icon">🔓</span> 복호화
-    </button>
-    <button class="tab-btn" onclick="switchTab('info')" id="tab-info">
-        <span class="tab-icon">ℹ️</span> 정보
-    </button>
+    <button class="tab-btn active" onclick="switchTab('encrypt')" id="tab-encrypt">암호화</button>
+    <button class="tab-btn" onclick="switchTab('decrypt')" id="tab-decrypt">복호화</button>
 </div>
 
-<!-- ============================= -->
-<!-- ===== 암호화 탭 ===== -->
-<!-- ============================= -->
+<!-- 암호화 탭 -->
 <div class="tab-content active" id="content-encrypt">
-
-    <!-- 키 입력 -->
     <div class="card">
-        <div class="card-title">🗝️ 암호화 키 설정</div>
+        <div class="card-title">암호화 키</div>
         <div class="input-group">
             <label class="input-label">숫자 키 (복호화 시 동일한 키 필요)</label>
             <input
-                type="number"
+                type="text"
                 id="enc-key"
                 class="input-field key-field"
                 placeholder="예: 1234"
                 inputmode="numeric"
-                oninput="updateKeyStrength(this.value)"
+                pattern="[0-9]*"
+                oninput="onKeyInput(this, 'enc')"
                 maxlength="10"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
             >
             <div class="key-strength">
                 <div class="strength-bar" id="sb1"></div>
@@ -591,104 +371,73 @@
         </div>
     </div>
 
-    <!-- 텍스트 입력 -->
     <div class="card">
-        <div class="card-title">✍️ 평문 입력</div>
+        <div class="card-title">평문 입력</div>
         <div class="input-group">
             <label class="input-label">한글 / 영어 / 숫자 모두 지원</label>
             <textarea
                 id="enc-input"
                 class="input-field"
-                placeholder="암호화할 텍스트를 입력하세요...&#10;&#10;예) 안녕하세요! Hello World 123"
+                placeholder="암호화할 텍스트를 입력하세요..."
                 oninput="updateCharCount('enc-input', 'enc-count')"
             ></textarea>
             <div class="char-count" id="enc-count">0자</div>
         </div>
-
         <div style="display:flex; gap:8px;">
-            <button class="btn btn-outline btn-small" onclick="clearEncrypt()">🗑️ 지우기</button>
-            <button class="btn btn-outline btn-small" onclick="pasteFromClipboard('enc-input')">📋 붙여넣기</button>
+            <button class="btn btn-outline btn-small" onclick="clearEncrypt()">지우기</button>
+            <button class="btn btn-outline btn-small" onclick="pasteFromClipboard('enc-input')">붙여넣기</button>
         </div>
     </div>
 
-    <!-- 오류 메시지 -->
     <div class="error-msg" id="enc-error">
-        <span>⚠️</span><span id="enc-error-text"></span>
+        <span>!</span><span id="enc-error-text"></span>
     </div>
 
-    <!-- 암호화 버튼 -->
     <button class="btn btn-primary" id="enc-btn" onclick="doEncrypt()">
-        <span>🔒</span> <span>암호화하기</span>
+        암호화하기
     </button>
 
-    <!-- 결과 -->
     <div id="enc-result-wrap" style="display:none;">
         <div class="result-box result-animate">
             <div class="result-header">
-                <div class="result-label">✅ 암호화 완료</div>
+                <div class="result-label">암호화 완료</div>
                 <div style="display:flex; gap:6px;">
-                    <button class="btn btn-success btn-small" onclick="copyText('enc-output')">
-                        📋 복사
-                    </button>
-                    <button class="btn btn-outline btn-small" onclick="shareText()">
-                        📤 공유
-                    </button>
+                    <button class="btn btn-success btn-small" onclick="copyText('enc-output')">복사</button>
+                    <button class="btn btn-outline btn-small" onclick="shareText()">공유</button>
                 </div>
             </div>
             <div class="result-text" id="enc-output"></div>
         </div>
-
-        <!-- 암호화 단계 시각화 -->
-        <div class="steps-flow result-animate">
-            <div class="step-item">
-                <div class="step-icon-wrap" style="background:rgba(59,130,246,0.15)">📊</div>
-                <div class="step-name" style="color:#3b82f6">Row<br>전치</div>
-            </div>
-            <div class="step-arrow">›</div>
-            <div class="step-item">
-                <div class="step-icon-wrap" style="background:rgba(245,158,11,0.15)">📎</div>
-                <div class="step-name" style="color:#f59e0b">Expansion<br>확장</div>
-            </div>
-            <div class="step-arrow">›</div>
-            <div class="step-item">
-                <div class="step-icon-wrap" style="background:rgba(16,185,129,0.15)">🔀</div>
-                <div class="step-name" style="color:#10b981">Substitution<br>치환</div>
-            </div>
-            <div class="step-arrow">›</div>
-            <div class="step-item">
-                <div class="step-icon-wrap" style="background:rgba(124,58,237,0.15)">🔐</div>
-                <div class="step-name" style="color:#7c3aed">Base64<br>인코딩</div>
-            </div>
-        </div>
     </div>
-
 </div>
 
-<!-- ============================= -->
-<!-- ===== 복호화 탭 ===== -->
-<!-- ============================= -->
+<!-- 복호화 탭 -->
 <div class="tab-content" id="content-decrypt">
-
-    <!-- 키 입력 -->
     <div class="card">
-        <div class="card-title">🗝️ 복호화 키</div>
+        <div class="card-title">복호화 키</div>
         <div class="input-group">
             <label class="input-label">암호화 시 사용한 키와 동일해야 합니다</label>
             <input
-                type="number"
+                type="text"
                 id="dec-key"
                 class="input-field key-field"
                 placeholder="예: 1234"
                 inputmode="numeric"
+                pattern="[0-9]*"
+                oninput="onKeyInput(this, 'dec')"
+                maxlength="10"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
             >
         </div>
     </div>
 
-    <!-- 암호문 입력 -->
     <div class="card">
-        <div class="card-title">🔒 암호문 입력</div>
+        <div class="card-title">암호문 입력</div>
         <div class="input-group">
-            <label class="input-label">복호화할 암호문 (Base64)</label>
+            <label class="input-label">복호화할 암호문</label>
             <textarea
                 id="dec-input"
                 class="input-field"
@@ -698,170 +447,36 @@
             ></textarea>
             <div class="char-count" id="dec-count">0자</div>
         </div>
-
         <div style="display:flex; gap:8px;">
-            <button class="btn btn-outline btn-small" onclick="clearDecrypt()">🗑️ 지우기</button>
-            <button class="btn btn-outline btn-small" onclick="pasteFromClipboard('dec-input')">📋 붙여넣기</button>
-            <button class="btn btn-outline btn-small" onclick="loadFromEncrypt()">↩️ 가져오기</button>
+            <button class="btn btn-outline btn-small" onclick="clearDecrypt()">지우기</button>
+            <button class="btn btn-outline btn-small" onclick="pasteFromClipboard('dec-input')">붙여넣기</button>
+            <button class="btn btn-outline btn-small" onclick="loadFromEncrypt()">가져오기</button>
         </div>
     </div>
 
-    <!-- 오류 메시지 -->
     <div class="error-msg" id="dec-error">
-        <span>⚠️</span><span id="dec-error-text"></span>
+        <span>!</span><span id="dec-error-text"></span>
     </div>
 
-    <!-- 복호화 버튼 -->
     <button class="btn btn-secondary" id="dec-btn" onclick="doDecrypt()">
-        <span>🔓</span> <span>복호화하기</span>
+        복호화하기
     </button>
 
-    <!-- 결과 -->
     <div id="dec-result-wrap" style="display:none;">
         <div class="result-box decrypt-result result-animate">
             <div class="result-header">
-                <div class="result-label decrypt">✅ 복호화 완료</div>
-                <button class="btn btn-secondary btn-small" onclick="copyText('dec-output')">
-                    📋 복사
-                </button>
+                <div class="result-label decrypt">복호화 완료</div>
+                <button class="btn btn-secondary btn-small" onclick="copyText('dec-output')">복사</button>
             </div>
             <div class="result-text plain-text" id="dec-output"></div>
         </div>
     </div>
-
 </div>
 
-<!-- ============================= -->
-<!-- ===== 정보 탭 ===== -->
-<!-- ============================= -->
-<div class="tab-content" id="content-info">
-
-    <div class="info-card">
-        <div class="info-title">🔐 RES 알고리즘이란?</div>
-        <p style="font-size:13px; color:var(--text-sub); line-height:1.7;">
-            RES는 세 가지 암호화 기법을 순서대로 적용하는
-            <strong>복합 대칭키 암호화</strong> 방식입니다.
-            동일한 키로 암호화/복호화가 가능합니다.
-        </p>
-    </div>
-
-    <div class="info-card">
-        <div class="info-title">⚙️ 암호화 단계</div>
-
-        <div class="algo-step" style="background:rgba(59,130,246,0.07);">
-            <div class="algo-num" style="background:rgba(59,130,246,0.15);">📊</div>
-            <div>
-                <div class="algo-title">
-                    Step 1 · Row Transposition
-                    <span class="badge" style="background:rgba(59,130,246,0.15);color:#3b82f6">행 전치</span>
-                </div>
-                <div class="algo-desc">
-                    텍스트를 키 기반 크기의 격자에 배열한 후,
-                    키에서 파생된 순서로 열을 재배치합니다.
-                </div>
-            </div>
-        </div>
-
-        <div class="algo-step" style="background:rgba(245,158,11,0.07);">
-            <div class="algo-num" style="background:rgba(245,158,11,0.15);">📎</div>
-            <div>
-                <div class="algo-title">
-                    Step 2 · Expansion
-                    <span class="badge" style="background:rgba(245,158,11,0.15);color:#f59e0b">노이즈 삽입</span>
-                </div>
-                <div class="algo-desc">
-                    키를 기반으로 특정 위치마다 노이즈 문자(#, @, ! 등)를
-                    삽입해 패턴 분석을 어렵게 만듭니다.
-                </div>
-            </div>
-        </div>
-
-        <div class="algo-step" style="background:rgba(16,185,129,0.07);">
-            <div class="algo-num" style="background:rgba(16,185,129,0.15);">🔀</div>
-            <div>
-                <div class="algo-title">
-                    Step 3 · Substitution
-                    <span class="badge" style="background:rgba(16,185,129,0.15);color:#10b981">문자 치환</span>
-                </div>
-                <div class="algo-desc">
-                    각 문자를 고정 치환 테이블에 따라 다른 문자로
-                    교체합니다. 한글·영어·숫자 모두 지원합니다.
-                </div>
-            </div>
-        </div>
-
-        <div class="algo-step" style="background:rgba(124,58,237,0.07);">
-            <div class="algo-num" style="background:rgba(124,58,237,0.15);">🔐</div>
-            <div>
-                <div class="algo-title">
-                    Step 4 · Base64 Encoding
-                    <span class="badge" style="background:rgba(124,58,237,0.15);color:#7c3aed">출력 변환</span>
-                </div>
-                <div class="algo-desc">
-                    최종 결과를 Base64로 인코딩하여 안전하게
-                    공유 가능한 문자열로 출력합니다.
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="info-card">
-        <div class="info-title">📱 사용 방법</div>
-        <div style="display:flex; flex-direction:column; gap:10px;">
-            <div style="display:flex; align-items:center; gap:12px; font-size:14px;">
-                <span style="font-size:24px;">1️⃣</span>
-                <span>암호화 탭에서 텍스트와 키를 입력</span>
-            </div>
-            <div style="display:flex; align-items:center; gap:12px; font-size:14px;">
-                <span style="font-size:24px;">2️⃣</span>
-                <span>'암호화하기' 버튼 탭</span>
-            </div>
-            <div style="display:flex; align-items:center; gap:12px; font-size:14px;">
-                <span style="font-size:24px;">3️⃣</span>
-                <span>결과 복사 또는 공유 버튼으로 전송</span>
-            </div>
-            <div style="display:flex; align-items:center; gap:12px; font-size:14px;">
-                <span style="font-size:24px;">4️⃣</span>
-                <span>복호화 탭에서 동일한 키로 복원</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="info-card" style="border:1px solid rgba(245,158,11,0.3);">
-        <div class="info-title" style="color:var(--warning);">⚠️ 주의사항</div>
-        <div style="font-size:13px; color:var(--text-sub); line-height:1.8;">
-            • 키를 분실하면 <strong>복호화 불가</strong>합니다<br>
-            • 이 앱은 <strong>교육/실험 목적</strong>입니다<br>
-            • 보안이 중요한 데이터는 <strong>AES-256 권장</strong><br>
-            • 홈 화면 추가 시 앱처럼 사용 가능합니다
-        </div>
-    </div>
-
-    <!-- 홈 화면 추가 안내 -->
-    <div class="info-card" style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:none;">
-        <div class="info-title" style="color:var(--primary);">📲 홈 화면에 추가하기</div>
-        <div style="font-size:13px; color:var(--text-sub); line-height:1.8;">
-            Safari 하단 <strong>공유 버튼(⬆️)</strong> →<br>
-            <strong>'홈 화면에 추가'</strong> 탭 →<br>
-            앱처럼 전체 화면으로 사용 가능! 🎉
-        </div>
-    </div>
-
-</div>
-
-<!-- ===== 토스트 알림 ===== -->
 <div class="toast" id="toast"></div>
 
-<!-- ============================= -->
-<!-- ===== JavaScript 로직 ===== -->
-<!-- ============================= -->
 <script>
-// ============================================================
-// RES 암호화 엔진
-// ============================================================
 const RESCipher = {
-
-    // ── 치환 테이블 ──
     subTable: {
         'A':'Q','B':'W','C':'E','D':'R','E':'T','F':'Y','G':'U','H':'I',
         'I':'O','J':'P','K':'A','L':'S','M':'D','N':'F','O':'G','P':'H',
@@ -874,18 +489,12 @@ const RESCipher = {
         '0':'5','1':'6','2':'7','3':'8','4':'9',
         '5':'0','6':'1','7':'2','8':'3','9':'4',
     },
-
-    // ── 역치환 테이블 (자동 생성) ──
     get reverseSubTable() {
         const t = {};
         for (const [k, v] of Object.entries(this.subTable)) t[v] = k;
         return t;
     },
-
-    // ── 노이즈 문자 풀 ──
     noiseChars: ['#','@','!','%','^','&','~','|','?','+'],
-
-    // ── 열 순서 생성 (LCG 기반 의사난수) ──
     generateColumnOrder(columns, key) {
         const order = Array.from({length: columns}, (_, i) => i);
         let seed = key;
@@ -896,40 +505,29 @@ const RESCipher = {
         }
         return order;
     },
-
-    // ── Step 1: Row Transposition ──
     rowTransposition(text, key) {
         const cols = Math.max(2, (key % 8) + 2);
-        const chars = [...text]; // 유니코드(한글) 지원
+        const chars = [...text];
         const padLen = (cols - (chars.length % cols)) % cols;
         const padded = [...chars, ...Array(padLen).fill('★')];
-
         const colOrder = this.generateColumnOrder(cols, key);
         const rows = [];
         for (let i = 0; i < padded.length; i += cols) {
             rows.push(padded.slice(i, i + cols));
         }
-
         let result = '';
         for (const row of rows) {
-            for (const ci of colOrder) {
-                result += row[ci];
-            }
+            for (const ci of colOrder) result += row[ci];
         }
         return result;
     },
-
-    // ── Step 1 역방향 ──
     reverseRowTransposition(text, key) {
         const cols = Math.max(2, (key % 8) + 2);
         const chars = [...text];
         const rowCount = Math.ceil(chars.length / cols);
-
         const colOrder = this.generateColumnOrder(cols, key);
         const reverseOrder = Array(cols);
         colOrder.forEach((orig, newIdx) => { reverseOrder[orig] = newIdx; });
-
-        // 격자 채우기
         const grid = [];
         let idx = 0;
         for (let r = 0; r < rowCount; r++) {
@@ -939,21 +537,14 @@ const RESCipher = {
             }
             grid.push(row);
         }
-
         let result = '';
         for (const row of grid) {
             const restored = Array(cols);
-            for (let c = 0; c < cols; c++) {
-                restored[reverseOrder[c]] = row[c];
-            }
+            for (let c = 0; c < cols; c++) restored[reverseOrder[c]] = row[c];
             result += restored.join('');
         }
-
-        // 패딩 제거
         return result.replace(/★/g, '');
     },
-
-    // ── Step 2: Expansion (노이즈 삽입) ──
     expansion(text, key) {
         const keyStr = String(key);
         const chars = [...text];
@@ -968,8 +559,6 @@ const RESCipher = {
         }
         return result;
     },
-
-    // ── Step 2 역방향 (노이즈 제거) ──
     removeExpansion(text, key) {
         const keyStr = String(key);
         const chars = [...text];
@@ -979,26 +568,19 @@ const RESCipher = {
         while (i < chars.length) {
             result += chars[i];
             const kd = parseInt(keyStr[origIdx % keyStr.length]) || 1;
-            if ((origIdx + 1) % (kd + 1) === 0) {
-                i++; // 노이즈 문자 스킵
-            }
+            if ((origIdx + 1) % (kd + 1) === 0) { i++; }
             origIdx++;
             i++;
         }
         return result;
     },
-
-    // ── Step 3: Substitution ──
     substitution(text) {
         return [...text].map(c => this.subTable[c] ?? c).join('');
     },
-
     reverseSubstitution(text) {
         const rev = this.reverseSubTable;
         return [...text].map(c => rev[c] ?? c).join('');
     },
-
-    // ── 한글 치환 (유니코드 시프트) ──
     shiftHangul(text, shift) {
         return [...text].map(c => {
             const code = c.charCodeAt(0);
@@ -1008,7 +590,6 @@ const RESCipher = {
             return c;
         }).join('');
     },
-
     reverseShiftHangul(text, shift) {
         return [...text].map(c => {
             const code = c.charCodeAt(0);
@@ -1018,41 +599,30 @@ const RESCipher = {
             return c;
         }).join('');
     },
-
-    // ── 최종 암호화 ──
     encrypt(plainText, key) {
         const k = parseInt(key);
         const s1 = this.rowTransposition(plainText, k);
         const s2 = this.expansion(s1, k);
         const s3 = this.substitution(s2);
         const s4 = this.shiftHangul(s3, k % 100 + 1);
-        // UTF-8 → Base64
         const utf8 = unescape(encodeURIComponent(s4));
         return btoa(utf8);
     },
-
-    // ── 최종 복호화 ──
     decrypt(cipherText, key) {
         try {
             const k = parseInt(key);
-            // Base64 → UTF-8
             const utf8 = atob(cipherText);
             const s4 = decodeURIComponent(escape(utf8));
             const s3 = this.reverseShiftHangul(s4, k % 100 + 1);
             const s2 = this.reverseSubstitution(s3);
             const s1 = this.removeExpansion(s2, k);
             return this.reverseRowTransposition(s1, k);
-        } catch (e) {
+        } catch(e) {
             return null;
         }
     }
 };
 
-// ============================================================
-// UI 함수들
-// ============================================================
-
-// ── 탭 전환 ──
 function switchTab(name) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -1060,64 +630,55 @@ function switchTab(name) {
     document.getElementById('content-' + name).classList.add('active');
 }
 
-// ── 글자 수 카운트 ──
+function onKeyInput(el, prefix) {
+    el.value = el.value.replace(/[^0-9]/g, '');
+    if (prefix === 'enc') updateKeyStrength(el.value);
+}
+
 function updateCharCount(inputId, countId) {
     const len = [...document.getElementById(inputId).value].length;
     document.getElementById(countId).textContent = len.toLocaleString() + '자';
 }
 
-// ── 암호화 실행 ──
 function doEncrypt() {
     const text = document.getElementById('enc-input').value.trim();
     const key  = document.getElementById('enc-key').value.trim();
-
     hideError('enc');
-
     if (!text) { showError('enc', '암호화할 텍스트를 입력해주세요.'); return; }
-    if (!key || isNaN(key) || parseInt(key) <= 0) {
-        showError('enc', '올바른 숫자 키를 입력해주세요 (양수).'); return;
+    if (!key || !/^\d+$/.test(key) || parseInt(key) <= 0) {
+        showError('enc', '올바른 숫자 키를 입력해주세요.'); return;
     }
-
-    // 버튼 로딩 상태
     const btn = document.getElementById('enc-btn');
     btn.disabled = true;
     btn.innerHTML = '<div class="spinner"></div> 암호화 중...';
-
     setTimeout(() => {
         try {
             const result = RESCipher.encrypt(text, key);
             document.getElementById('enc-output').textContent = result;
-
             const wrap = document.getElementById('enc-result-wrap');
             wrap.style.display = 'block';
             wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-            showToast('✅ 암호화 완료!', 'success');
+            showToast('암호화 완료', 'success');
         } catch(e) {
-            showError('enc', '암호화 중 오류가 발생했습니다: ' + e.message);
+            showError('enc', '오류: ' + e.message);
         } finally {
             btn.disabled = false;
-            btn.innerHTML = '<span>🔒</span> <span>암호화하기</span>';
+            btn.innerHTML = '암호화하기';
         }
     }, 100);
 }
 
-// ── 복호화 실행 ──
 function doDecrypt() {
     const cipher = document.getElementById('dec-input').value.trim();
     const key    = document.getElementById('dec-key').value.trim();
-
     hideError('dec');
-
     if (!cipher) { showError('dec', '복호화할 암호문을 입력해주세요.'); return; }
-    if (!key || isNaN(key) || parseInt(key) <= 0) {
+    if (!key || !/^\d+$/.test(key) || parseInt(key) <= 0) {
         showError('dec', '올바른 숫자 키를 입력해주세요.'); return;
     }
-
     const btn = document.getElementById('dec-btn');
     btn.disabled = true;
     btn.innerHTML = '<div class="spinner"></div> 복호화 중...';
-
     setTimeout(() => {
         try {
             const result = RESCipher.decrypt(cipher, key);
@@ -1125,30 +686,26 @@ function doDecrypt() {
                 showError('dec', '복호화 실패: 키가 틀렸거나 잘못된 암호문입니다.');
             } else {
                 document.getElementById('dec-output').textContent = result;
-
                 const wrap = document.getElementById('dec-result-wrap');
                 wrap.style.display = 'block';
                 wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-                showToast('✅ 복호화 완료!', 'success');
+                showToast('복호화 완료', 'success');
             }
         } catch(e) {
             showError('dec', '복호화 오류: 올바른 형식이 아닙니다.');
         } finally {
             btn.disabled = false;
-            btn.innerHTML = '<span>🔓</span> <span>복호화하기</span>';
+            btn.innerHTML = '복호화하기';
         }
     }, 100);
 }
 
-// ── 클립보드 복사 ──
 async function copyText(elementId) {
     const text = document.getElementById(elementId).textContent;
     try {
         await navigator.clipboard.writeText(text);
-        showToast('📋 클립보드에 복사됨!', 'info');
+        showToast('클립보드에 복사됨', 'info');
     } catch {
-        // fallback
         const ta = document.createElement('textarea');
         ta.value = text;
         ta.style.position = 'fixed';
@@ -1157,36 +714,32 @@ async function copyText(elementId) {
         ta.select();
         document.execCommand('copy');
         document.body.removeChild(ta);
-        showToast('📋 복사됨!', 'info');
+        showToast('복사됨', 'info');
     }
 }
 
-// ── 공유 ──
 async function shareText() {
     const text = document.getElementById('enc-output').textContent;
     if (navigator.share) {
-        try {
-            await navigator.share({ title: 'RES 암호문', text });
-        } catch(e) { /* 취소 */ }
+        try { await navigator.share({ title: 'RES 암호문', text }); }
+        catch(e) {}
     } else {
         copyText('enc-output');
     }
 }
 
-// ── 붙여넣기 ──
 async function pasteFromClipboard(inputId) {
     try {
         const text = await navigator.clipboard.readText();
         document.getElementById(inputId).value = text;
         const countId = inputId === 'enc-input' ? 'enc-count' : 'dec-count';
         updateCharCount(inputId, countId);
-        showToast('📋 붙여넣기 완료', 'info');
+        showToast('붙여넣기 완료', 'info');
     } catch {
-        showToast('⚠️ 직접 붙여넣기 해주세요 (길게 탭)', 'error');
+        showToast('직접 붙여넣기 해주세요 (길게 탭)', 'error');
     }
 }
 
-// ── 암호화 탭에서 복호화 탭으로 가져오기 ──
 function loadFromEncrypt() {
     const encrypted = document.getElementById('enc-output').textContent;
     const key = document.getElementById('enc-key').value;
@@ -1194,15 +747,15 @@ function loadFromEncrypt() {
         document.getElementById('dec-input').value = encrypted;
         document.getElementById('dec-key').value = key;
         updateCharCount('dec-input', 'dec-count');
-        showToast('↩️ 가져오기 완료', 'info');
+        showToast('가져오기 완료', 'info');
     } else {
-        showToast('⚠️ 먼저 암호화를 실행하세요', 'error');
+        showToast('먼저 암호화를 실행하세요', 'error');
     }
 }
 
-// ── 초기화 ──
 function clearEncrypt() {
     document.getElementById('enc-input').value = '';
+    document.getElementById('enc-key').value = '';
     document.getElementById('enc-count').textContent = '0자';
     document.getElementById('enc-result-wrap').style.display = 'none';
     document.getElementById('enc-output').textContent = '';
@@ -1212,56 +765,46 @@ function clearEncrypt() {
 
 function clearDecrypt() {
     document.getElementById('dec-input').value = '';
+    document.getElementById('dec-key').value = '';
     document.getElementById('dec-count').textContent = '0자';
     document.getElementById('dec-result-wrap').style.display = 'none';
     document.getElementById('dec-output').textContent = '';
     hideError('dec');
 }
 
-// ── 오류 표시 ──
 function showError(prefix, msg) {
     const el = document.getElementById(prefix + '-error');
-    const txt = document.getElementById(prefix + '-error-text');
-    txt.textContent = msg;
+    document.getElementById(prefix + '-error-text').textContent = msg;
     el.classList.add('show');
     el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
-
 function hideError(prefix) {
     document.getElementById(prefix + '-error').classList.remove('show');
 }
 
-// ── 토스트 알림 ──
 function showToast(msg, type = 'info') {
     const toast = document.getElementById('toast');
     toast.textContent = msg;
     toast.className = 'toast ' + type;
     toast.classList.add('show');
     clearTimeout(window._toastTimer);
-    window._toastTimer = setTimeout(() => {
-        toast.classList.remove('show');
-    }, 2200);
+    window._toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
 }
 
-// ── 키 강도 표시 ──
 function updateKeyStrength(value) {
     const len = value.length;
-    const bars = ['sb1','sb2','sb3','sb4','sb5'];
     const colors = ['#ef4444','#f97316','#eab308','#22c55e','#10b981'];
     const labels = ['매우 약함','약함','보통','강함','매우 강함'];
-
     let strength = 0;
     if (len >= 1) strength = 1;
     if (len >= 3) strength = 2;
     if (len >= 5) strength = 3;
     if (len >= 7) strength = 4;
     if (len >= 9) strength = 5;
-
-    bars.forEach((id, i) => {
-        const el = document.getElementById(id);
-        el.style.background = i < strength ? colors[strength - 1] : 'var(--border)';
+    ['sb1','sb2','sb3','sb4','sb5'].forEach((id, i) => {
+        document.getElementById(id).style.background =
+            i < strength ? colors[strength - 1] : 'var(--border)';
     });
-
     const label = document.getElementById('strength-label');
     if (len === 0) {
         label.textContent = '키를 입력하면 강도가 표시됩니다';
@@ -1276,10 +819,11 @@ function resetKeyStrength() {
     ['sb1','sb2','sb3','sb4','sb5'].forEach(id => {
         document.getElementById(id).style.background = 'var(--border)';
     });
-    document.getElementById('strength-label').textContent = '키를 입력하면 강도가 표시됩니다';
+    const label = document.getElementById('strength-label');
+    label.textContent = '키를 입력하면 강도가 표시됩니다';
+    label.style.color = 'var(--text-sub)';
 }
 
-// ── 엔터키 지원 ──
 document.getElementById('enc-key').addEventListener('keydown', e => {
     if (e.key === 'Enter') doEncrypt();
 });
@@ -1287,7 +831,6 @@ document.getElementById('dec-key').addEventListener('keydown', e => {
     if (e.key === 'Enter') doDecrypt();
 });
 
-// ── iOS 키보드 밀림 방지 ──
 document.querySelectorAll('input, textarea').forEach(el => {
     el.addEventListener('focus', () => {
         setTimeout(() => {
