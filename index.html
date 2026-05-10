@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="RES Cipher">
-    <title>RES Cipher</title>
+    <meta name="apple-mobile-web-app-title" content="AES Cipher">
+    <title>AES Cipher</title>
     <style>
         :root {
             --primary: #7c3aed;
@@ -74,6 +74,18 @@
             margin-top: 4px;
             letter-spacing: 1px;
         }
+        .header-badge {
+            display: inline-block;
+            margin-top: 8px;
+            background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+        }
         .tab-bar {
             display: flex;
             background: var(--card);
@@ -124,6 +136,18 @@
             font-weight: 700;
             color: var(--primary);
             margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .card-title .badge {
+            font-size: 10px;
+            font-weight: 700;
+            background: rgba(124,58,237,0.1);
+            color: var(--primary);
+            border-radius: 6px;
+            padding: 2px 7px;
+            letter-spacing: 0.5px;
         }
         .input-group { margin-bottom: 14px; }
         .input-label {
@@ -153,11 +177,31 @@
             box-shadow: 0 0 0 4px rgba(124,58,237,0.08);
         }
         .input-field.key-field {
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: 3px;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 2px;
             text-align: center;
             color: var(--primary);
+        }
+        /* 비밀번호 토글 wrapper */
+        .pw-wrapper {
+            position: relative;
+        }
+        .pw-wrapper .input-field {
+            padding-right: 48px;
+        }
+        .pw-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text-sub);
+            padding: 4px;
+            line-height: 1;
         }
         textarea.input-field {
             min-height: 130px;
@@ -259,6 +303,31 @@
             font-family: inherit;
             font-size: 16px;
         }
+        /* 키 강도 */
+        .key-strength {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+        .strength-bar {
+            height: 4px;
+            flex: 1;
+            border-radius: 2px;
+            background: var(--border);
+            transition: background 0.3s;
+        }
+        /* 정보 박스 */
+        .info-box {
+            background: rgba(124,58,237,0.05);
+            border: 1px solid rgba(124,58,237,0.15);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-top: 4px;
+            line-height: 1.7;
+        }
+        .info-box strong { color: var(--primary); }
         .toast {
             position: fixed;
             bottom: 90px;
@@ -295,18 +364,6 @@
             display: none;
         }
         .error-msg.show { display: flex; align-items: center; gap: 8px; }
-        .key-strength {
-            display: flex;
-            gap: 4px;
-            margin-top: 8px;
-        }
-        .strength-bar {
-            height: 4px;
-            flex: 1;
-            border-radius: 2px;
-            background: var(--border);
-            transition: background 0.3s;
-        }
         .spinner {
             width: 20px;
             height: 20px;
@@ -328,36 +385,43 @@
 </head>
 <body>
 
+<!-- ───────── 헤더 ───────── -->
 <div class="app-header">
-    <div class="header-title">RES Cipher</div>
-    <div class="header-sub">Row · Expansion · Substitution</div>
+    <div class="header-title"> AES Cipher</div>
+    <div class="header-sub">Advanced · Encryption · Standard</div>
+    <div class="header-badge">AES-256-GCM</div>
 </div>
 
+<!-- ───────── 탭 바 ───────── -->
 <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('encrypt')" id="tab-encrypt">암호화</button>
-    <button class="tab-btn" onclick="switchTab('decrypt')" id="tab-decrypt">복호화</button>
+    <button class="tab-btn active" onclick="switchTab('encrypt')" id="tab-encrypt"> 암호화</button>
+    <button class="tab-btn" onclick="switchTab('decrypt')" id="tab-decrypt"> 복호화</button>
 </div>
 
-<!-- 암호화 탭 -->
+<!-- ───────── 암호화 탭 ───────── -->
 <div class="tab-content active" id="content-encrypt">
+
     <div class="card">
-        <div class="card-title">암호화 키</div>
+        <div class="card-title">
+             암호화 키
+            <span class="badge">AES-256</span>
+        </div>
         <div class="input-group">
-            <label class="input-label">숫자 키 (복호화 시 동일한 키 필요)</label>
-            <input
-                type="text"
-                id="enc-key"
-                class="input-field key-field"
-                placeholder="예: 1234"
-                inputmode="numeric"
-                pattern="[0-9]*"
-                oninput="onKeyInput(this, 'enc')"
-                maxlength="10"
-                autocomplete="off"
-                autocorrect="off"
-                autocapitalize="off"
-                spellcheck="false"
-            >
+            <label class="input-label">비밀번호 (복호화 시 동일한 키 필요)</label>
+            <div class="pw-wrapper">
+                <input
+                    type="password"
+                    id="enc-key"
+                    class="input-field key-field"
+                    placeholder="비밀번호를 입력하세요"
+                    oninput="onKeyInput(this, 'enc')"
+                    autocomplete="new-password"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                >
+                <button class="pw-toggle" onclick="togglePw('enc-key', this)" type="button">👁️</button>
+            </div>
             <div class="key-strength">
                 <div class="strength-bar" id="sb1"></div>
                 <div class="strength-bar" id="sb2"></div>
@@ -369,12 +433,17 @@
                 키를 입력하면 강도가 표시됩니다
             </div>
         </div>
+        <div class="info-box">
+            <strong>AES-256-GCM</strong> 방식으로 암호화됩니다.<br>
+            키는 <strong>PBKDF2</strong>(100,000회 반복)로 안전하게 변환되며,<br>
+            매번 <strong>랜덤 Salt + IV</strong>가 생성되어 결과가 달라집니다.
+        </div>
     </div>
 
     <div class="card">
-        <div class="card-title">평문 입력</div>
+        <div class="card-title">📝 평문 입력</div>
         <div class="input-group">
-            <label class="input-label">한글 / 영어 / 숫자 모두 지원</label>
+            <label class="input-label">한글 / 영어 / 숫자 / 특수문자 모두 지원</label>
             <textarea
                 id="enc-input"
                 class="input-field"
@@ -383,24 +452,24 @@
             ></textarea>
             <div class="char-count" id="enc-count">0자</div>
         </div>
-        <div style="display:flex; gap:8px;">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button class="btn btn-outline btn-small" onclick="clearEncrypt()">지우기</button>
             <button class="btn btn-outline btn-small" onclick="pasteFromClipboard('enc-input')">붙여넣기</button>
         </div>
     </div>
 
     <div class="error-msg" id="enc-error">
-        <span>!</span><span id="enc-error-text"></span>
+        <span></span><span id="enc-error-text"></span>
     </div>
 
     <button class="btn btn-primary" id="enc-btn" onclick="doEncrypt()">
-        암호화하기
+         암호화하기
     </button>
 
     <div id="enc-result-wrap" style="display:none;">
         <div class="result-box result-animate">
             <div class="result-header">
-                <div class="result-label">암호화 완료</div>
+                <div class="result-label">  암호화 완료</div>
                 <div style="display:flex; gap:6px;">
                     <button class="btn btn-success btn-small" onclick="copyText('enc-output')">복사</button>
                     <button class="btn btn-outline btn-small" onclick="shareText()">공유</button>
@@ -409,45 +478,50 @@
             <div class="result-text" id="enc-output"></div>
         </div>
     </div>
+
 </div>
 
-<!-- 복호화 탭 -->
+<!-- ───────── 복호화 탭 ───────── -->
 <div class="tab-content" id="content-decrypt">
+
     <div class="card">
-        <div class="card-title">복호화 키</div>
+        <div class="card-title">
+             복호화 키
+            <span class="badge">AES-256</span>
+        </div>
         <div class="input-group">
-            <label class="input-label">암호화 시 사용한 키와 동일해야 합니다</label>
-            <input
-                type="text"
-                id="dec-key"
-                class="input-field key-field"
-                placeholder="예: 1234"
-                inputmode="numeric"
-                pattern="[0-9]*"
-                oninput="onKeyInput(this, 'dec')"
-                maxlength="10"
-                autocomplete="off"
-                autocorrect="off"
-                autocapitalize="off"
-                spellcheck="false"
-            >
+            <label class="input-label">암호화 시 사용한 비밀번호와 동일해야 합니다</label>
+            <div class="pw-wrapper">
+                <input
+                    type="password"
+                    id="dec-key"
+                    class="input-field key-field"
+                    placeholder="비밀번호를 입력하세요"
+                    oninput="onKeyInput(this, 'dec')"
+                    autocomplete="current-password"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                >
+                <button class="pw-toggle" onclick="togglePw('dec-key', this)" type="button">👁️</button>
+            </div>
         </div>
     </div>
 
     <div class="card">
-        <div class="card-title">암호문 입력</div>
+        <div class="card-title"> 암호문 입력</div>
         <div class="input-group">
-            <label class="input-label">복호화할 암호문</label>
+            <label class="input-label">복호화할 AES 암호문</label>
             <textarea
                 id="dec-input"
                 class="input-field"
-                placeholder="암호화된 텍스트를 붙여넣으세요..."
+                placeholder="AES 암호화된 텍스트를 붙여넣으세요..."
                 oninput="updateCharCount('dec-input', 'dec-count')"
                 style="font-family: 'SF Mono', monospace; font-size:13px;"
             ></textarea>
             <div class="char-count" id="dec-count">0자</div>
         </div>
-        <div style="display:flex; gap:8px;">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button class="btn btn-outline btn-small" onclick="clearDecrypt()">지우기</button>
             <button class="btn btn-outline btn-small" onclick="pasteFromClipboard('dec-input')">붙여넣기</button>
             <button class="btn btn-outline btn-small" onclick="loadFromEncrypt()">가져오기</button>
@@ -455,197 +529,97 @@
     </div>
 
     <div class="error-msg" id="dec-error">
-        <span>!</span><span id="dec-error-text"></span>
+        <span></span><span id="dec-error-text"></span>
     </div>
 
     <button class="btn btn-secondary" id="dec-btn" onclick="doDecrypt()">
-        복호화하기
+         복호화하기
     </button>
 
     <div id="dec-result-wrap" style="display:none;">
         <div class="result-box decrypt-result result-animate">
             <div class="result-header">
-                <div class="result-label decrypt">복호화 완료</div>
+                <div class="result-label decrypt">  복호화 완료</div>
                 <button class="btn btn-secondary btn-small" onclick="copyText('dec-output')">복사</button>
             </div>
             <div class="result-text plain-text" id="dec-output"></div>
         </div>
     </div>
+
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-const RESCipher = {
-    subTable: {
-        'A':'Q','B':'W','C':'E','D':'R','E':'T','F':'Y','G':'U','H':'I',
-        'I':'O','J':'P','K':'A','L':'S','M':'D','N':'F','O':'G','P':'H',
-        'Q':'J','R':'K','S':'L','T':'Z','U':'X','V':'C','W':'V','X':'B',
-        'Y':'N','Z':'M',
-        'a':'q','b':'w','c':'e','d':'r','e':'t','f':'y','g':'u','h':'i',
-        'i':'o','j':'p','k':'a','l':'s','m':'d','n':'f','o':'g','p':'h',
-        'q':'j','r':'k','s':'l','t':'z','u':'x','v':'c','w':'v','x':'b',
-        'y':'n','z':'m',
-        '0':'5','1':'6','2':'7','3':'8','4':'9',
-        '5':'0','6':'1','7':'2','8':'3','9':'4',
-    },
-    get reverseSubTable() {
-        const t = {};
-        for (const [k, v] of Object.entries(this.subTable)) t[v] = k;
-        return t;
-    },
-    noiseChars: ['#','@','!','%','^','&','~','|','?','+'],
+/* ════════════════════════════════════════════
+   AES-256-GCM  ·  Web Crypto API
+   키 파생: PBKDF2 (SHA-256, 100000 iterations)
+   포맷: Base64( salt[16] | iv[12] | ciphertext )
+════════════════════════════════════════════ */
+const AESCipher = {
 
-    generateColumnOrder(columns, key) {
-        const order = Array.from({length: columns}, (_, i) => i);
-        let seed = key;
-        for (let i = columns - 1; i >= 1; i--) {
-            seed = ((seed * 1103515245 + 12345) & 0x7fffffff) >>> 0;
-            const j = seed % (i + 1);
-            [order[i], order[j]] = [order[j], order[i]];
-        }
-        return order;
-    },
-
-    // 암호화: 행별로 colOrder 순서로 열을 읽어서 출력
-    rowTransposition(text, key) {
-        const cols = Math.max(2, (key % 8) + 2);
-        const chars = [...text];
-        const padLen = (cols - (chars.length % cols)) % cols;
-        const padded = [...chars, ...Array(padLen).fill('★')];
-        const colOrder = this.generateColumnOrder(cols, key);
-        const rows = [];
-        for (let i = 0; i < padded.length; i += cols) {
-            rows.push(padded.slice(i, i + cols));
-        }
-        let result = '';
-        for (const row of rows) {
-            for (const ci of colOrder) result += row[ci];
-        }
-        return result;
+    /* 문자열 키 → CryptoKey (PBKDF2 → AES-GCM) */
+    async deriveKey(password, salt) {
+        const enc = new TextEncoder();
+        const keyMaterial = await crypto.subtle.importKey(
+            'raw',
+            enc.encode(password),
+            { name: 'PBKDF2' },
+            false,
+            ['deriveKey']
+        );
+        return crypto.subtle.deriveKey(
+            {
+                name: 'PBKDF2',
+                salt: salt,
+                iterations: 100000,
+                hash: 'SHA-256'
+            },
+            keyMaterial,
+            { name: 'AES-GCM', length: 256 },
+            false,
+            ['encrypt', 'decrypt']
+        );
     },
 
-    // 복호화: 암호화의 정확한 역연산
-    reverseRowTransposition(text, key) {
-        const cols = Math.max(2, (key % 8) + 2);
-        const chars = [...text];
-        const rowCount = Math.ceil(chars.length / cols);
-        const colOrder = this.generateColumnOrder(cols, key);
-
-        // colOrder[newIdx] = origCol 이므로
-        // 역매핑: origCol → newIdx
-        const inverseOrder = Array(cols);
-        for (let newIdx = 0; newIdx < cols; newIdx++) {
-            inverseOrder[colOrder[newIdx]] = newIdx;
-        }
-
-        // 암호화된 텍스트를 행별로 자름
-        const grid = [];
-        let idx = 0;
-        for (let r = 0; r < rowCount; r++) {
-            const row = [];
-            for (let c = 0; c < cols; c++) {
-                row.push(idx < chars.length ? chars[idx++] : '★');
-            }
-            grid.push(row);
-        }
-
-        // 각 행에서 inverseOrder로 원래 위치 복원
-        let result = '';
-        for (const row of grid) {
-            const restored = Array(cols);
-            for (let newIdx = 0; newIdx < cols; newIdx++) {
-                restored[colOrder[newIdx]] = row[newIdx];
-            }
-            result += restored.join('');
-        }
-
-        return result.replace(/★/g, '');
+    /* 암호화 → Base64 문자열 반환 */
+    async encrypt(plainText, password) {
+        const enc     = new TextEncoder();
+        const salt    = crypto.getRandomValues(new Uint8Array(16));
+        const iv      = crypto.getRandomValues(new Uint8Array(12));
+        const key     = await this.deriveKey(password, salt);
+        const cipher  = await crypto.subtle.encrypt(
+            { name: 'AES-GCM', iv },
+            key,
+            enc.encode(plainText)
+        );
+        /* salt(16) + iv(12) + ciphertext 를 합쳐 Base64로 */
+        const combined = new Uint8Array(salt.length + iv.length + cipher.byteLength);
+        combined.set(salt,     0);
+        combined.set(iv,       salt.length);
+        combined.set(new Uint8Array(cipher), salt.length + iv.length);
+        return btoa(String.fromCharCode(...combined));
     },
 
-    expansion(text, key) {
-        const keyStr = String(key);
-        const chars = [...text];
-        let result = '';
-        for (let i = 0; i < chars.length; i++) {
-            result += chars[i];
-            const kd = parseInt(keyStr[i % keyStr.length]) || 1;
-            if ((i + 1) % (kd + 1) === 0) {
-                const ni = (i * key) % this.noiseChars.length;
-                result += this.noiseChars[ni];
-            }
-        }
-        return result;
-    },
-
-    removeExpansion(text, key) {
-        const keyStr = String(key);
-        const chars = [...text];
-        let result = '';
-        let origIdx = 0;
-        let i = 0;
-        while (i < chars.length) {
-            result += chars[i];
-            const kd = parseInt(keyStr[origIdx % keyStr.length]) || 1;
-            if ((origIdx + 1) % (kd + 1) === 0) { i++; }
-            origIdx++;
-            i++;
-        }
-        return result;
-    },
-
-    substitution(text) {
-        return [...text].map(c => this.subTable[c] ?? c).join('');
-    },
-    reverseSubstitution(text) {
-        const rev = this.reverseSubTable;
-        return [...text].map(c => rev[c] ?? c).join('');
-    },
-
-    shiftHangul(text, shift) {
-        return [...text].map(c => {
-            const code = c.charCodeAt(0);
-            if (code >= 0xAC00 && code <= 0xD7A3) {
-                return String.fromCharCode(((code - 0xAC00 + shift) % 11172) + 0xAC00);
-            }
-            return c;
-        }).join('');
-    },
-    reverseShiftHangul(text, shift) {
-        return [...text].map(c => {
-            const code = c.charCodeAt(0);
-            if (code >= 0xAC00 && code <= 0xD7A3) {
-                return String.fromCharCode(((code - 0xAC00 - shift + 11172) % 11172) + 0xAC00);
-            }
-            return c;
-        }).join('');
-    },
-
-    encrypt(plainText, key) {
-        const k = parseInt(key);
-        const s1 = this.rowTransposition(plainText, k);
-        const s2 = this.expansion(s1, k);
-        const s3 = this.substitution(s2);
-        const s4 = this.shiftHangul(s3, k % 100 + 1);
-        const utf8 = unescape(encodeURIComponent(s4));
-        return btoa(utf8);
-    },
-
-    decrypt(cipherText, key) {
-        try {
-            const k = parseInt(key);
-            const utf8 = atob(cipherText);
-            const s4 = decodeURIComponent(escape(utf8));
-            const s3 = this.reverseShiftHangul(s4, k % 100 + 1);
-            const s2 = this.reverseSubstitution(s3);
-            const s1 = this.removeExpansion(s2, k);
-            return this.reverseRowTransposition(s1, k);
-        } catch(e) {
-            return null;
-        }
+    /* Base64 문자열 → 복호화 */
+    async decrypt(b64Text, password) {
+        const raw      = Uint8Array.from(atob(b64Text), c => c.charCodeAt(0));
+        const salt     = raw.slice(0, 16);
+        const iv       = raw.slice(16, 28);
+        const data     = raw.slice(28);
+        const key      = await this.deriveKey(password, salt);
+        const plain    = await crypto.subtle.decrypt(
+            { name: 'AES-GCM', iv },
+            key,
+            data
+        );
+        return new TextDecoder().decode(plain);
     }
 };
 
+/* ════════════════════════════════════════════
+   UI 헬퍼
+════════════════════════════════════════════ */
 function switchTab(name) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -653,8 +627,18 @@ function switchTab(name) {
     document.getElementById('content-' + name).classList.add('active');
 }
 
+function togglePw(inputId, btn) {
+    const inp = document.getElementById(inputId);
+    if (inp.type === 'password') {
+        inp.type = 'text';
+        btn.textContent = '🙈';
+    } else {
+        inp.type = 'password';
+        btn.textContent = '👁️';
+    }
+}
+
 function onKeyInput(el, prefix) {
-    el.value = el.value.replace(/[^0-9]/g, '');
     if (prefix === 'enc') updateKeyStrength(el.value);
 }
 
@@ -663,66 +647,69 @@ function updateCharCount(inputId, countId) {
     document.getElementById(countId).textContent = len.toLocaleString() + '자';
 }
 
-function doEncrypt() {
-    const text = document.getElementById('enc-input').value.trim();
-    const key  = document.getElementById('enc-key').value.trim();
+/* ════════════════════════════════════════════
+   암호화
+════════════════════════════════════════════ */
+async function doEncrypt() {
+    const text = document.getElementById('enc-input').value;
+    const key  = document.getElementById('enc-key').value;
     hideError('enc');
-    if (!text) { showError('enc', '암호화할 텍스트를 입력해주세요.'); return; }
-    if (!key || !/^\d+$/.test(key) || parseInt(key) <= 0) {
-        showError('enc', '올바른 숫자 키를 입력해주세요.'); return;
-    }
+
+    if (!text.trim()) { showError('enc', '암호화할 텍스트를 입력해주세요.'); return; }
+    if (!key)         { showError('enc', '비밀번호(키)를 입력해주세요.');    return; }
+
     const btn = document.getElementById('enc-btn');
     btn.disabled = true;
-    btn.innerHTML = '<div class="spinner"></div> 암호화 중...';
-    setTimeout(() => {
-        try {
-            const result = RESCipher.encrypt(text, key);
-            document.getElementById('enc-output').textContent = result;
-            const wrap = document.getElementById('enc-result-wrap');
-            wrap.style.display = 'block';
-            wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            showToast('암호화 완료', 'success');
-        } catch(e) {
-            showError('enc', '오류: ' + e.message);
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = '암호화하기';
-        }
-    }, 100);
+    btn.innerHTML = '<div class="spinner"></div> AES 암호화 중...';
+
+    try {
+        const result = await AESCipher.encrypt(text, key);
+        document.getElementById('enc-output').textContent = result;
+        const wrap = document.getElementById('enc-result-wrap');
+        wrap.style.display = 'block';
+        wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        showToast('AES 암호화 완료 ', 'success');
+    } catch(e) {
+        showError('enc', '암호화 오류: ' + e.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = ' 암호화하기';
+    }
 }
 
-function doDecrypt() {
+/* ════════════════════════════════════════════
+   복호화
+════════════════════════════════════════════ */
+async function doDecrypt() {
     const cipher = document.getElementById('dec-input').value.trim();
-    const key    = document.getElementById('dec-key').value.trim();
+    const key    = document.getElementById('dec-key').value;
     hideError('dec');
+
     if (!cipher) { showError('dec', '복호화할 암호문을 입력해주세요.'); return; }
-    if (!key || !/^\d+$/.test(key) || parseInt(key) <= 0) {
-        showError('dec', '올바른 숫자 키를 입력해주세요.'); return;
-    }
+    if (!key)    { showError('dec', '비밀번호(키)를 입력해주세요.');    return; }
+
     const btn = document.getElementById('dec-btn');
     btn.disabled = true;
-    btn.innerHTML = '<div class="spinner"></div> 복호화 중...';
-    setTimeout(() => {
-        try {
-            const result = RESCipher.decrypt(cipher, key);
-            if (result === null || result === undefined) {
-                showError('dec', '복호화 실패: 키가 틀렸거나 잘못된 암호문입니다.');
-            } else {
-                document.getElementById('dec-output').textContent = result;
-                const wrap = document.getElementById('dec-result-wrap');
-                wrap.style.display = 'block';
-                wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                showToast('복호화 완료', 'success');
-            }
-        } catch(e) {
-            showError('dec', '복호화 오류: 올바른 형식이 아닙니다.');
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = '복호화하기';
-        }
-    }, 100);
+    btn.innerHTML = '<div class="spinner"></div> AES 복호화 중...';
+
+    try {
+        const result = await AESCipher.decrypt(cipher, key);
+        document.getElementById('dec-output').textContent = result;
+        const wrap = document.getElementById('dec-result-wrap');
+        wrap.style.display = 'block';
+        wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        showToast('AES 복호화 완료 ', 'success');
+    } catch(e) {
+        showError('dec', '복호화 실패: 키가 틀렸거나 잘못된 암호문입니다.');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = ' 복호화하기';
+    }
 }
 
+/* ════════════════════════════════════════════
+   클립보드 / 공유 / 가져오기
+════════════════════════════════════════════ */
 async function copyText(elementId) {
     const text = document.getElementById(elementId).textContent;
     try {
@@ -731,8 +718,7 @@ async function copyText(elementId) {
     } catch {
         const ta = document.createElement('textarea');
         ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
+        ta.style.cssText = 'position:fixed;opacity:0';
         document.body.appendChild(ta);
         ta.select();
         document.execCommand('copy');
@@ -744,7 +730,7 @@ async function copyText(elementId) {
 async function shareText() {
     const text = document.getElementById('enc-output').textContent;
     if (navigator.share) {
-        try { await navigator.share({ title: 'RES 암호문', text }); }
+        try { await navigator.share({ title: 'AES 암호문', text }); }
         catch(e) {}
     } else {
         copyText('enc-output');
@@ -795,6 +781,9 @@ function clearDecrypt() {
     hideError('dec');
 }
 
+/* ════════════════════════════════════════════
+   에러 / 토스트 / 키 강도
+════════════════════════════════════════════ */
 function showError(prefix, msg) {
     const el = document.getElementById(prefix + '-error');
     document.getElementById(prefix + '-error-text').textContent = msg;
@@ -816,14 +805,22 @@ function showToast(msg, type = 'info') {
 
 function updateKeyStrength(value) {
     const len = value.length;
+    const hasUpper  = /[A-Z]/.test(value);
+    const hasLower  = /[a-z]/.test(value);
+    const hasNum    = /[0-9]/.test(value);
+    const hasSymbol = /[^A-Za-z0-9]/.test(value);
+    const variety   = [hasUpper, hasLower, hasNum, hasSymbol].filter(Boolean).length;
+
+    let strength = 0;
+    if (len >= 1)  strength = 1;
+    if (len >= 6)  strength = 2;
+    if (len >= 8 && variety >= 2) strength = 3;
+    if (len >= 10 && variety >= 3) strength = 4;
+    if (len >= 12 && variety >= 4) strength = 5;
+
     const colors = ['#ef4444','#f97316','#eab308','#22c55e','#10b981'];
     const labels = ['매우 약함','약함','보통','강함','매우 강함'];
-    let strength = 0;
-    if (len >= 1) strength = 1;
-    if (len >= 3) strength = 2;
-    if (len >= 5) strength = 3;
-    if (len >= 7) strength = 4;
-    if (len >= 9) strength = 5;
+
     ['sb1','sb2','sb3','sb4','sb5'].forEach((id, i) => {
         document.getElementById(id).style.background =
             i < strength ? colors[strength - 1] : 'var(--border)';
@@ -847,6 +844,9 @@ function resetKeyStrength() {
     label.style.color = 'var(--text-sub)';
 }
 
+/* ════════════════════════════════════════════
+   키보드 단축키
+════════════════════════════════════════════ */
 document.getElementById('enc-key').addEventListener('keydown', e => {
     if (e.key === 'Enter') doEncrypt();
 });
